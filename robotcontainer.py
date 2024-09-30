@@ -10,7 +10,6 @@ import typing
 import commands2
 import commands2.button
 import wpilib
-import romi
 
 from commands.arcadedrive import ArcadeDrive
 #from commands.autonomous_distance import AutonomousDistance
@@ -29,10 +28,6 @@ class RobotContainer:
 
     def __init__(self) -> None:
         # The robot's subsystems and commands are defined here...
-        self.drivetrain = Drivetrain()
-        self.onboardIO = romi.OnBoardIO(
-            romi.OnBoardIO.ChannelMode.INPUT, romi.OnBoardIO.ChannelMode.INPUT
-        )
 
         # Assumes a gamepad plugged into channnel 0
         self.controller = wpilib.Joystick(constants.DRIVE_JOYSTICK_PORT)
@@ -59,16 +54,6 @@ class RobotContainer:
         :class:`.XboxController`), and then passing it to a :class:`.JoystickButton`.
         """
 
-        # Default command is arcade drive. This will run unless another command
-        # is scheduler over it
-        self.drivetrain.setDefaultCommand(self.getArcadeDriveCommand())
-
-        # Example of how to use the onboard IO
-        onboardButtonA = commands2.button.Trigger(self.onboardIO.getButtonAPressed)
-        onboardButtonA.onTrue(commands2.PrintCommand("Button A Pressed")).onFalse(
-            commands2.PrintCommand("Button A Released")
-        )
-
         # Setup SmartDashboard options
         #self.chooser.setDefaultOption(
         #    "Auto Routine Distance", AutonomousDistance(self.drivetrain)
@@ -78,14 +63,3 @@ class RobotContainer:
 
     def getAutonomousCommand(self) -> typing.Optional[commands2.Command]:
         return self.chooser.getSelected()
-
-    def getArcadeDriveCommand(self) -> ArcadeDrive:
-        """Use this to pass the teleop command to the main robot class.
-
-        :returns: the command to run in teleop
-        """
-        return ArcadeDrive(
-            self.drivetrain,
-            lambda: self.controller.getX(),
-            lambda: self.controller.getY(),
-        )
