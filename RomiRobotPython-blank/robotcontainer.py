@@ -11,8 +11,8 @@ import commands2
 import commands2.button
 import wpilib
 import wpilib.drive
-import SillyFolder.DefaultDrive
-import SillyFolder.myRobotThingy
+from SillyFolder.DefaultDriveCommand import DefaultDriveCommand
+from SillyFolder.MySubsystem import MySubsystem
 
 #from commands.arcadedrive import ArcadeDrive
 #from commands.autonomous_distance import AutonomousDistance
@@ -31,7 +31,7 @@ class RobotContainer:
 
     def __init__(self) -> None:
         # The robot's subsystems and commands are defined here...
-        self.iphone11 = SillyFolder.myRobotThingy
+        self.whatIsThis = MySubsystem()
         # Assumes a gamepad plugged into channnel 0
         self.controller = wpilib.Joystick(0)
 
@@ -50,13 +50,7 @@ class RobotContainer:
         # Your subsystem configuration should take the overlays into account
         self._configureButtonBindings()
 
-        self.iphone11.setDefaultCommand(
-            SillyFolder.DefaultDrive(
-                self.iphone11,
-                lambda: -self.controller.getRawAxis(0),
-                lambda:  self.controller.getRawAxis(1)
-            )
-        )
+        self.whatIsThis.setDefaultCommand(DefaultDriveCommand(self.whatIsThis, lambda: -self.controller.getRawAxis(0), lambda:  self.controller.getRawAxis(1)))
 
     def _configureButtonBindings(self):
         """Use this method to define your button->command mappings. Buttons can be created by
